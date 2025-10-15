@@ -5,7 +5,8 @@ import OpenAI from 'openai';
 import { Database } from '../_lib/database.ts';
 
 const openai = new OpenAI({
-  apiKey: Deno.env.get('OPENAI_API_KEY'),
+  apiKey: Deno.env.get('CLOUDFLARE_API_KEY'), 
+  baseURL: `https://api.cloudflare.com/client/v4/accounts/${Deno.env.get('CLOUDFLARE_ACCOUNT_ID')}/ai/v1`,
 });
 
 // These are automatically injected
@@ -116,10 +117,9 @@ Deno.serve(async (req) => {
     ];
 
   const completionStream = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-0125',
+    model: '@hf/nousresearch/hermes-2-pro-mistral-7b',
     messages: completionMessages,
     max_tokens: 1024,
-    temperature: 0,
     stream: true,
   });
 
