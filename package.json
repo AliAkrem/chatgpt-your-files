@@ -7,10 +7,18 @@
     "gen:types": "supabase gen types typescript --local > supabase/functions/_lib/database.ts"
   },
   "dependencies": {
+    "@ai-sdk/react": "^2.0.72",
+    "@mantine/code-highlight": "^8.3.5",
+    "@mantine/core": "^8.3.5",
+    "@mantine/dropzone": "^8.3.5",
+    "@mantine/form": "^8.3.5",
+    "@mantine/hooks": "^8.3.5",
+    "@mantine/modals": "^8.3.5",
+    "@mantine/notifications": "^8.3.5",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
-    "@supabase/auth-helpers-nextjs": "latest",
-    "@supabase/supabase-js": "latest",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.75.1",
     "@tanstack/react-query": "^4.35.7",
     "@xenova/transformers": "^2.6.2",
     "ai": "^2.2.14",
@@ -19,7 +27,6 @@
     "clsx": "^2.0.0",
     "lucide-react": "^0.284.0",
     "next": "latest",
-    "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^1.14.0",
@@ -33,6 +40,9 @@
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
     "encoding": "^0.1.13",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "supabase": "^1.163.2"
   }
 }

@@ -1,42 +1,90 @@
-import Messages from './messages';
+"use client";
+import Messages from "./messages";
+
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Paper,
+  PasswordInput,
+  Text,
+  TextInput,
+  Title,
+} from "@mantine/core";
+import classes from "./style/login.module.css";
+import { useForm } from "@mantine/form";
+import { Sign } from "crypto";
+import { SignIn } from "../auth/sign-in/action";
 
 export default function Login() {
+  const form = useForm({
+    mode: "controlled",
+    initialValues: {
+      email: "",
+      password: "",
+    },
+
+    validate: {
+      email: (value: string) =>
+        /^\S+@\S+$/.test(value) ? null : "Invalid email",
+      password: (value: string) =>
+        value.length >= 6 ? null : "Password must be at least 6 characters",
+    },
+  });
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    form.validate();
+
+    if (!!form.isValid)
+      SignIn({
+        email: form.values.email,
+        password: form.values.password,
+      });
+  };
+
   return (
-    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
-      <form
-        className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-        action="/auth/sign-in"
-        method="post"
-      >
-        <label className="text-md" htmlFor="email">
-          Email
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          name="email"
-          placeholder="you@example.com"
-          required
-        />
-        <label className="text-md" htmlFor="password">
-          Password
-        </label>
-        <input
-          className="rounded-md px-4 py-2 bg-inherit border mb-6"
-          type="password"
-          name="password"
-          placeholder="••••••••"
-          required
-        />
-        <button className="bg-green-700 rounded px-4 py-2 text-white mb-2">
-          Sign In
-        </button>
-        <button
-          formAction="/auth/sign-up"
-          className="border border-gray-700 rounded px-4 py-2 text-black mb-2"
-        >
-          Sign Up
-        </button>
-        <Messages />
+    <div className={classes.wrapper}>
+      <form method="post" onSubmit={onSubmit}>
+        <Paper className={classes.form}>
+          <Title order={2} className={classes.title}>
+            Welcome back to Mantine!
+          </Title>
+
+          <TextInput
+            label="Email address"
+            placeholder="hello@gmail.com"
+            name="email"
+            size="md"
+            radius="md"
+            key={form.key("email")}
+            {...form.getInputProps("email")}
+          />
+          <PasswordInput
+            label="Password"
+            placeholder="Your password"
+            name="password"
+            mt="md"
+            size="md"
+            radius="md"
+            key={form.key("password")}
+            {...form.getInputProps("password")}
+          />
+          <Button type="submit" fullWidth mt="xl" size="md" radius="md">
+            Login
+          </Button>
+
+          <Text ta="center" mt="md">
+            Don&apos;t have an account?{" "}
+            <Anchor
+              href="#"
+              fw={500}
+              onClick={(event) => event.preventDefault()}
+            >
+              Register
+            </Anchor>
+          </Text>
+        </Paper>
       </form>
     </div>
   );

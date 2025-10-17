@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverActions: true,
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       sharp$: false,
-      'onnxruntime-node$': false,
+      "onnxruntime-node$": false,
     };
     return config;
   },
