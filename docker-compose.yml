@@ -1,0 +1,14 @@
+services:
+  app-dev:
+    build: .
+    container_name: chat-with-docs
+    volumes:
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    tty: true
+    stdin_open: true # allows interactive shell
+
+volumes:
+  node_modules:
