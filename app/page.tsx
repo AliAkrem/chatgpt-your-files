@@ -1,50 +1,99 @@
-import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
+"use client";
+import { Button, Container, Flex, Group, Text } from "@mantine/core";
+import classes from "./home.module.css";
+import { useEffect, useRef } from "react";
+import { animate, createTimeline, splitText, stagger } from "animejs";
+import ThunderLogo from "@/components/logos/thunderLogo";
 
-export default async function Index() {
-  const supabase = await createClient();
+export default function HomePage() {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const vendurRef = useRef<HTMLParagraphElement>(null);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    // Animate title characters
+    if (titleRef.current) {
+      animate(titleRef.current, {
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 1000,
+        delay: 500,
+        easing: "easeOutQuad",
+      });
+    }
+
+    // Animate description
+    if (descriptionRef.current) {
+      animate(descriptionRef.current, {
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 1000,
+        delay: 500,
+        easing: "easeOutQuad",
+      });
+    }
+
+    // Animate buttons
+    if (controlsRef.current) {
+      const buttons = controlsRef.current.querySelectorAll("button, a");
+      animate(buttons, {
+        opacity: [0, 1],
+        translateY: [20, 0],
+        scale: [0.9, 1],
+        duration: 800,
+        delay: stagger(150, { start: 800 }),
+        easing: "easeOutBack",
+      });
+    }
+  }, []);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="flex flex-col gap-14 max-w-4xl px-3 py-16 lg:py-24 text-foreground">
-        <div className="flex flex-col items-center mb-4 lg:mb-12">
-          <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-          <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center my-12">
-            Chat with your files using <strong>Supabase</strong> and{" "}
-            <strong>Next.js</strong>
-          </p>
-          {user ? (
-            <div className="flex flex-row gap-2">
-              <Link
-                href="/files"
-                className="bg-foreground py-3 px-6 rounded-lg font-mono text-sm text-background"
-              >
-                Upload
-              </Link>
-              <Link
-                href="/chat"
-                className="bg-foreground py-3 px-6 rounded-lg font-mono text-sm text-background"
-              >
-                Chat
-              </Link>
-            </div>
-          ) : (
-            <div className="flex flex-row gap-2">
-              <Link
-                href="/login"
-                className="bg-foreground py-3 px-6 rounded-lg font-mono text-sm text-background"
-              >
-                Login
-              </Link>
-            </div>
-          )}
-        </div>
-        <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
-      </div>
+    <div className={classes.wrapper}>
+      <Container size={"lg"} className={classes.inner}>
+        <h1 style={{ opacity: 0 }} ref={titleRef} className={classes.title}>
+          Talk to Your Data with{" "}
+          <Text component="span" c="blue" inherit>
+            <Flex align={"center"}>
+              Supabosh <ThunderLogo />
+            </Flex>
+          </Text>{" "}
+        </h1>
+
+        <Text
+          ref={descriptionRef}
+          className={classes.description}
+          c="dimmed"
+          style={{ opacity: 0 }}
+        >
+          Integrate Retrieval-Augmented Generation in minutes. Ground your
+          chatbot in real documents, APIs, or databases — no hallucinations,
+          just reliable answers.
+        </Text>
+
+        <Group ref={controlsRef} className={classes.controls}>
+          <Button
+            size="xl"
+            className={classes.control}
+            variant="gradient"
+            gradient={{ from: "blue", to: "cyan" }}
+            style={{ opacity: 0 }}
+          >
+            Get started
+          </Button>
+
+          <Button
+            component="a"
+            href="https://github.com/mantinedev/mantine"
+            size="xl"
+            variant="default"
+            className={classes.control}
+            style={{ opacity: 0 }}
+          >
+            GitHub
+          </Button>
+        </Group>
+      </Container>
     </div>
   );
 }

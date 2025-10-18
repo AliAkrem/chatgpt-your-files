@@ -1,10 +1,8 @@
 "use client";
-import Messages from "./messages";
 
 import {
   Anchor,
   Button,
-  Checkbox,
   Paper,
   PasswordInput,
   Text,
@@ -13,17 +11,19 @@ import {
 } from "@mantine/core";
 import classes from "./style/login.module.css";
 import { useForm } from "@mantine/form";
-import { Sign } from "crypto";
 import { SignIn } from "../auth/sign-in/action";
+import { useState, useTransition } from "react";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const form = useForm({
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
       email: "",
       password: "",
     },
-
     validate: {
       email: (value: string) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email",
@@ -32,55 +32,73 @@ export default function Login() {
     },
   });
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    form.validate();
+  const [isPending, startTransition] = useTransition();
 
-    if (!!form.isValid)
-      SignIn({
-        email: form.values.email,
-        password: form.values.password,
+  const handleSubmit = async (values: typeof form.values) => {
+    setError("");
+
+    const formData = new FormData();
+    formData.append("email", values.email);
+    formData.append("password", values.password);
+
+    try {
+      startTransition(async () => {
+        const { error } = await SignIn(null, formData);
+        setError(error);
       });
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+      setLoading(false);
+    }
   };
 
   return (
     <div className={classes.wrapper}>
-      <form method="post" onSubmit={onSubmit}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Paper className={classes.form}>
           <Title order={2} className={classes.title}>
             Welcome back to Mantine!
           </Title>
 
+          {error && (
+            <Text c="red" size="sm" mt="sm">
+              {error}
+            </Text>
+          )}
+
           <TextInput
             label="Email address"
             placeholder="hello@gmail.com"
-            name="email"
             size="md"
             radius="md"
             key={form.key("email")}
             {...form.getInputProps("email")}
           />
+
           <PasswordInput
             label="Password"
             placeholder="Your password"
-            name="password"
             mt="md"
             size="md"
             radius="md"
             key={form.key("password")}
             {...form.getInputProps("password")}
           />
-          <Button type="submit" fullWidth mt="xl" size="md" radius="md">
+
+          <Button
+            type="submit"
+            fullWidth
+            mt="xl"
+            size="md"
+            radius="md"
+            loading={isPending}
+          >
             Login
           </Button>
 
           <Text ta="center" mt="md">
             Don&apos;t have an account?{" "}
-            <Anchor
-              href="#"
-              fw={500}
-              onClick={(event) => event.preventDefault()}
-            >
+            <Anchor href="#" fw={500}>
               Register
             </Anchor>
           </Text>
