@@ -85,16 +85,18 @@ export default function HomePage() {
             Get started
           </Button>
 
-          {process.env.NODE_ENV === "development" && (<Button
-            component={Link}
-            href="dev/auth-demo"
-            size="xl"
-            variant="light"
-            className={classes.control}
-            style={{ opacity: 0 }}
-          >
-            Auth Demo
-          </Button>)}
+          {process.env.NODE_ENV === "development" && (
+            <Button
+              component={Link}
+              href="dev/auth-demo"
+              size="xl"
+              variant="light"
+              className={classes.control}
+              style={{ opacity: 0 }}
+            >
+              Auth Demo
+            </Button>
+          )}
 
           <Button
             component="a"

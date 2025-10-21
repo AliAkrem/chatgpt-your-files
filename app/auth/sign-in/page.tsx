@@ -87,7 +87,12 @@ export default function Login() {
           />
 
           <Text ta="right" mt="xs">
-            <Anchor component={Link} href="/auth/forgot-password" size="sm" fw={500}>
+            <Anchor
+              component={Link}
+              href="/auth/forgot-password"
+              size="sm"
+              fw={500}
+            >
               Forgot password?
             </Anchor>
           </Text>

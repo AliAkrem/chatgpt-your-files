@@ -31,12 +31,14 @@ export default function SignUpPage() {
         /^\S+@\S+$/.test(value) ? null : "Invalid email",
       password: (value: string) =>
         value.length >= 6 ? null : "Password must be at least 6 characters",
-      confirm: (value: string, values: {
-        email: string,
-        password: string,
-        confirm: string,
-      }) =>
-        value === values.password ? null : "Passwords do not match",
+      confirm: (
+        value: string,
+        values: {
+          email: string;
+          password: string;
+          confirm: string;
+        },
+      ) => (value === values.password ? null : "Passwords do not match"),
     },
   });
 

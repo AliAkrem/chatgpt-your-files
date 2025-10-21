@@ -31,12 +31,14 @@ export default function ChangePasswordPage() {
         value.length >= 6 ? null : "Password must be at least 6 characters",
       newPassword: (value: string) =>
         value.length >= 6 ? null : "Password must be at least 6 characters",
-      confirm: (value: string, values: {
-        currentPassword: string,
-        newPassword: string,
-        confirm: string,
-      }) =>
-        value === values.newPassword ? null : "Passwords do not match",
+      confirm: (
+        value: string,
+        values: {
+          currentPassword: string;
+          newPassword: string;
+          confirm: string;
+        },
+      ) => (value === values.newPassword ? null : "Passwords do not match"),
     },
   });
 

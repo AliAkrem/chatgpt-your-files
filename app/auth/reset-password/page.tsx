@@ -26,11 +26,13 @@ export default function ResetPasswordPage() {
     validate: {
       password: (value: string) =>
         value.length >= 6 ? null : "Password must be at least 6 characters",
-      confirm: (value: string, values : {
-        password: string,
-      confirm: string,
-      }) =>
-        value === values.password ? null : "Passwords do not match",
+      confirm: (
+        value: string,
+        values: {
+          password: string;
+          confirm: string;
+        },
+      ) => (value === values.password ? null : "Passwords do not match"),
     },
   });
 

@@ -1,13 +1,13 @@
-import { Pipeline, pipeline, Tensor } from '@huggingface/transformers';
-import { PipeParameters, PipeReturnType } from '../hooks/use-pipeline';
+import { Pipeline, pipeline, Tensor } from "@huggingface/transformers";
+import { PipeParameters, PipeReturnType } from "../hooks/use-pipeline";
 
 export type InitEventData = {
-  type: 'init';
+  type: "init";
   args: Parameters<typeof pipeline>;
 };
 
 export type RunEventData = {
-  type: 'run';
+  type: "run";
   id: number;
   args: PipeParameters;
 };
@@ -20,22 +20,22 @@ type BaseProgressUpdate = {
 };
 
 export type InitiateProgressUpdate = BaseProgressUpdate & {
-  status: 'initiate';
+  status: "initiate";
 };
 
 export type DownloadProgressUpdate = BaseProgressUpdate & {
-  status: 'download';
+  status: "download";
 };
 
 export type ProgressProgressUpdate = BaseProgressUpdate & {
-  status: 'progress';
+  status: "progress";
   progress: number;
   loaded: number;
   total: number;
 };
 
 export type DoneProgressUpdate = BaseProgressUpdate & {
-  status: 'done';
+  status: "done";
 };
 
 export type ProgressUpdate =
@@ -45,16 +45,16 @@ export type ProgressUpdate =
   | DoneProgressUpdate;
 
 export type ProgressEventData = {
-  type: 'progress';
+  type: "progress";
   data: ProgressUpdate;
 };
 
 export type ReadyEventData = {
-  type: 'ready';
+  type: "ready";
 };
 
 export type ResultEventData = {
-  type: 'result';
+  type: "result";
   id: number;
   data: PipeReturnType;
 };
@@ -71,20 +71,19 @@ class PipelineSingleton {
     // @ts-ignore-next-line
     this.instance = await pipeline(...args);
   }
-
 }
 
 // Listen for messages from the main thread
 self.addEventListener(
-  'message',
+  "message",
   async (event: MessageEvent<IncomingEventData>) => {
     const { type, args } = event.data;
 
     switch (type) {
-      case 'init': {
+      case "init": {
         const progress_callback = (progressInfo: any) => {
           self.postMessage({
-            type: 'progress',
+            type: "progress",
             data: progressInfo as ProgressUpdate,
           } satisfies ProgressEventData);
         };
@@ -97,14 +96,14 @@ self.addEventListener(
         });
 
         self.postMessage({
-          type: 'ready',
+          type: "ready",
         } satisfies ReadyEventData);
 
         break;
       }
-      case 'run': {
+      case "run": {
         if (!PipelineSingleton.instance) {
-          throw new Error('Pipeline not initialized');
+          throw new Error("Pipeline not initialized");
         }
 
         const { id } = event.data;
@@ -112,16 +111,17 @@ self.addEventListener(
         const output = await PipelineSingleton.instance(...args);
 
         // Serialize tensor data properly for transfer
-        const data = output instanceof Tensor
-          ? {
-            type: output.type,
-            data: Array.from(output.data), // Convert TypedArray to regular array
-            dims: output.dims,
-          }
-          : output;
+        const data =
+          output instanceof Tensor
+            ? {
+                type: output.type,
+                data: Array.from(output.data), // Convert TypedArray to regular array
+                dims: output.dims,
+              }
+            : output;
 
         self.postMessage({
-          type: 'result',
+          type: "result",
           id,
           data,
         } satisfies ResultEventData);
@@ -129,5 +129,5 @@ self.addEventListener(
         break;
       }
     }
-  }
+  },
 );

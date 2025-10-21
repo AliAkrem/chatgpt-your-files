@@ -89,11 +89,10 @@ export default function Navbar() {
   ));
 
   return (
-    <Box >
+    <Box>
       <header className={classes.header}>
         <Group align="center" justify="space-between" h="100%">
-
-          <Box component={Link} href={'/'} w={32} >
+          <Box component={Link} href={"/"} w={32}>
             <SupaboshLogo enableAnimation={false} />
           </Box>
           <Group h="100%" gap={0} visibleFrom="sm">
@@ -156,8 +155,12 @@ export default function Navbar() {
           </Group>
 
           <Group visibleFrom="sm">
-            <Button component={Link} href="/auth/sign-in" variant="default"  >Log in</Button>
-            <Button component={Link} href="/auth/sign-up" >Sign up</Button>
+            <Button component={Link} href="/auth/sign-in" variant="default">
+              Log in
+            </Button>
+            <Button component={Link} href="/auth/sign-up">
+              Sign up
+            </Button>
           </Group>
 
           <Burger

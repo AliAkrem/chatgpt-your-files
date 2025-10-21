@@ -1,18 +1,11 @@
 "use client";
 
-import {
-  Menu,
-  Avatar,
-  Text,
-  UnstyledButton,
-  Group,
-  rem
-} from "@mantine/core";
+import { Menu, Avatar, Text, UnstyledButton, Group, rem } from "@mantine/core";
 import {
   IconChevronDown,
   IconKey,
   IconLogout,
-  IconUser
+  IconUser,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -39,11 +32,7 @@ export default function UserMenu({ user }: UserMenuProps) {
       <Menu.Target>
         <UnstyledButton>
           <Group gap={7}>
-            <Avatar
-              radius="xl"
-              size={32}
-              color="blue"
-            >
+            <Avatar radius="xl" size={32} color="blue">
               {user.email?.charAt(0).toUpperCase() || "U"}
             </Avatar>
             <Text fw={500} size="sm" lh={1} mr={3}>
@@ -59,7 +48,10 @@ export default function UserMenu({ user }: UserMenuProps) {
       <Menu.Dropdown>
         <Menu.Item
           leftSection={
-            <IconUser style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            <IconUser
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
           }
           disabled
         >
@@ -86,7 +78,10 @@ export default function UserMenu({ user }: UserMenuProps) {
           component={Link}
           href="/auth/sign-out"
           leftSection={
-            <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+            <IconLogout
+              style={{ width: rem(16), height: rem(16) }}
+              stroke={1.5}
+            />
           }
           color="red"
         >

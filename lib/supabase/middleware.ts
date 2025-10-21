@@ -47,7 +47,6 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&

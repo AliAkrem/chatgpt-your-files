@@ -20,10 +20,6 @@ import {
 import Link from "next/link";
 
 export default async function AuthDemoPage() {
-
-
-
-
   return (
     <Container size="md" py="xl">
       <Stack gap="xl">
@@ -88,7 +84,11 @@ export default async function AuthDemoPage() {
                   </Text>
                 </div>
               </Group>
-              <Button component={Link} href="/auth/forgot-password" variant="light">
+              <Button
+                component={Link}
+                href="/auth/forgot-password"
+                variant="light"
+              >
                 Go to Forgot Password
               </Button>
             </Group>
@@ -105,7 +105,11 @@ export default async function AuthDemoPage() {
                   </Text>
                 </div>
               </Group>
-              <Button component={Link} href="/auth/forgot-password" variant="light">
+              <Button
+                component={Link}
+                href="/auth/forgot-password"
+                variant="light"
+              >
                 Go to Reset Password
               </Button>
             </Group>
@@ -122,7 +126,11 @@ export default async function AuthDemoPage() {
                   </Text>
                 </div>
               </Group>
-              <Button component={Link} href="/auth/change-password" variant="light">
+              <Button
+                component={Link}
+                href="/auth/change-password"
+                variant="light"
+              >
                 Go to Change Password
               </Button>
             </Group>

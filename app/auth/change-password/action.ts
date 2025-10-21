@@ -21,7 +21,9 @@ export async function ChangePassword(prevState: any, formData: FormData) {
 
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
     return {
@@ -41,7 +43,6 @@ export async function ChangePassword(prevState: any, formData: FormData) {
   }
 
   const { error } = await supabase.auth.updateUser({
-
     password: newPassword,
   });
 
