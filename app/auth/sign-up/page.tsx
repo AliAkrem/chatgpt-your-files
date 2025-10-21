@@ -11,24 +11,32 @@ import {
 } from "@mantine/core";
 import classes from "./style/login.module.css";
 import { useForm } from "@mantine/form";
-import { SignIn } from "../auth/sign-in/action";
 import { useState, useTransition } from "react";
+import Link from "next/link";
+import { SignUp } from "./action";
 
-export default function Login() {
-  const [loading, setLoading] = useState(false);
+export default function SignUpPage() {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
       email: "",
       password: "",
+      confirm: "",
     },
     validate: {
       email: (value: string) =>
         /^\S+@\S+$/.test(value) ? null : "Invalid email",
       password: (value: string) =>
         value.length >= 6 ? null : "Password must be at least 6 characters",
+      confirm: (value: string, values: {
+        email: string,
+        password: string,
+        confirm: string,
+      }) =>
+        value === values.password ? null : "Passwords do not match",
     },
   });
 
@@ -36,6 +44,7 @@ export default function Login() {
 
   const handleSubmit = async (values: typeof form.values) => {
     setError("");
+    setSuccess("");
 
     const formData = new FormData();
     formData.append("email", values.email);
@@ -43,12 +52,16 @@ export default function Login() {
 
     try {
       startTransition(async () => {
-        const { error } = await SignIn(null, formData);
-        setError(error);
+        const result = await SignUp(null, formData);
+        if (result.error) {
+          setError(result.error);
+        } else if (result.success) {
+          setSuccess(result.success);
+          form.reset();
+        }
       });
     } catch (err: any) {
       setError(err.message || "An error occurred");
-      setLoading(false);
     }
   };
 
@@ -57,12 +70,18 @@ export default function Login() {
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Paper className={classes.form}>
           <Title order={2} className={classes.title}>
-            Welcome back to Mantine!
+            Create your account
           </Title>
 
           {error && (
             <Text c="red" size="sm" mt="sm">
               {error}
+            </Text>
+          )}
+
+          {success && (
+            <Text c="green" size="sm" mt="sm">
+              {success}
             </Text>
           )}
 
@@ -84,6 +103,15 @@ export default function Login() {
             key={form.key("password")}
             {...form.getInputProps("password")}
           />
+          <PasswordInput
+            label="Confirm Password"
+            placeholder="Re-type Your password"
+            mt="md"
+            size="md"
+            radius="md"
+            key={form.key("confirm")}
+            {...form.getInputProps("confirm")}
+          />
 
           <Button
             type="submit"
@@ -93,13 +121,13 @@ export default function Login() {
             radius="md"
             loading={isPending}
           >
-            Login
+            Sign Up
           </Button>
 
           <Text ta="center" mt="md">
-            Don&apos;t have an account?{" "}
-            <Anchor href="#" fw={500}>
-              Register
+            Already have an account?{" "}
+            <Anchor component={Link} href="/auth/sign-in" fw={500}>
+              Login
             </Anchor>
           </Text>
         </Paper>

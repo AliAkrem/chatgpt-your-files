@@ -1,15 +1,15 @@
 "use client";
-import { Button, Container, Flex, Group, Text } from "@mantine/core";
+import { Box, Button, Container, Flex, Group, Text } from "@mantine/core";
+import Link from "next/link";
 import classes from "./home.module.css";
 import { useEffect, useRef } from "react";
-import { animate, createTimeline, splitText, stagger } from "animejs";
-import ThunderLogo from "@/components/logos/thunderLogo";
+import { animate, stagger } from "animejs";
+import SupaboshLogo from "@/components/logos/supaBoshLogo";
 
 export default function HomePage() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
-  const vendurRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     // Animate title characters
@@ -55,7 +55,10 @@ export default function HomePage() {
           Talk to Your Data with{" "}
           <Text component="span" c="blue" inherit>
             <Flex align={"center"}>
-              Supabosh <ThunderLogo />
+              Supabosh{" "}
+              <Box w={64}>
+                <SupaboshLogo enableAnimation />
+              </Box>
             </Flex>
           </Text>{" "}
         </h1>
@@ -81,6 +84,17 @@ export default function HomePage() {
           >
             Get started
           </Button>
+
+          {process.env.NODE_ENV === "development" && (<Button
+            component={Link}
+            href="dev/auth-demo"
+            size="xl"
+            variant="light"
+            className={classes.control}
+            style={{ opacity: 0 }}
+          >
+            Auth Demo
+          </Button>)}
 
           <Button
             component="a"

@@ -1,16 +1,13 @@
-import LogoutButton from "@/components/LogoutButton";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/lib/providers";
-import Link from "next/link";
 import { PropsWithChildren } from "react";
 import "three-dots/dist/three-dots.css";
 import { createClient } from "@/lib/supabase/server";
 import "@mantine/core/styles.css";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-  mantineHtmlProps,
-} from "@mantine/core";
+import "@mantine/notifications/styles.css";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
+import Navbar from "./_components/navbar";
 
 export const metadata = {
   title: "Create Next App",
@@ -25,14 +22,16 @@ export default async function RootLayout({ children }: PropsWithChildren) {
   } = await supabase.auth.getUser();
 
   return (
-    <html lang="en" className="h-full">
+    <html lang="en">
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="h-full">
+      <body>
         <MantineProvider>
+          <Notifications position="top-right" zIndex={1000} />
           <Providers>
             <div>
+              <Navbar />
               <main>{children}</main>
               <Toaster />
             </div>
