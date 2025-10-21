@@ -1,4 +1,4 @@
-import { Pipeline, PretrainedOptions, Tensor } from '@xenova/transformers';
+import { Pipeline, PretrainedOptions, Tensor } from '@huggingface/transformers';
 import { useEffect, useState } from 'react';
 import {
   InitEventData,
@@ -60,6 +60,7 @@ export function usePipeline(
 
     worker.postMessage({
       type: 'init',
+      // @ts-ignore
       args: [task, model, transferableOptions],
     } satisfies InitEventData);
 
@@ -86,16 +87,15 @@ export function usePipeline(
     const onMessageReceived = (e: MessageEvent<OutgoingEventData>) => {
       switch (e.data.type) {
         case 'result':
-          const { id, data: serializedData } = e.data;
-          const { type, data, dims } = serializedData;
-          const output = new Tensor(type, data, dims);
+          const { id, data } = e.data;
           const callback = callbacks.get(id);
 
           if (!callback) {
             throw new Error(`Missing callback for pipe execution id: ${id}`);
           }
 
-          callback(output);
+          // Pass the data directly without reconstructing Tensor
+          callback(data);
           break;
       }
     };

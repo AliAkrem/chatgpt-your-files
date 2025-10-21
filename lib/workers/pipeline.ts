@@ -1,4 +1,4 @@
-import { Pipeline, pipeline } from '@xenova/transformers';
+import { Pipeline, pipeline, Tensor } from '@huggingface/transformers';
 import { PipeParameters, PipeReturnType } from '../hooks/use-pipeline';
 
 export type InitEventData = {
@@ -68,8 +68,10 @@ class PipelineSingleton {
   static instance?: Pipeline;
 
   static async init(...args: Parameters<typeof pipeline>) {
+    // @ts-ignore-next-line
     this.instance = await pipeline(...args);
   }
+
 }
 
 // Listen for messages from the main thread
@@ -80,10 +82,10 @@ self.addEventListener(
 
     switch (type) {
       case 'init': {
-        const progress_callback = (data: ProgressUpdate) => {
+        const progress_callback = (progressInfo: any) => {
           self.postMessage({
             type: 'progress',
-            data,
+            data: progressInfo as ProgressUpdate,
           } satisfies ProgressEventData);
         };
 
@@ -109,9 +111,14 @@ self.addEventListener(
 
         const output = await PipelineSingleton.instance(...args);
 
-        // Classes (ie. `Tensor`) cannot be transferred to the main thread,
-        // so we spread its properties into a plain object
-        const data = { ...output };
+        // Serialize tensor data properly for transfer
+        const data = output instanceof Tensor
+          ? {
+            type: output.type,
+            data: Array.from(output.data), // Convert TypedArray to regular array
+            dims: output.dims,
+          }
+          : output;
 
         self.postMessage({
           type: 'result',
