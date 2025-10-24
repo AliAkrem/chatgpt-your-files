@@ -1,14 +1,13 @@
-import { getCurrentUser } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+'use client'
 import { Paper, Title, Text, Stack, Group } from "@mantine/core";
 import UserMenu from "../_components/user-menu";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
-export default async function ProfilePage() {
-  const user = await getCurrentUser();
+export default function ProfilePage() {
 
-  if (!user) {
-    redirect("/auth/sign-in");
-  }
+  const { user } = useAuthStore();
+
+  if (!user) return;
 
   return (
     <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>

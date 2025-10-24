@@ -14,16 +14,17 @@ export async function SignIn(prevState: any, formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data: {
+    user
+  }, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
+  return {
+    user,
+    error,
+  };
 
-  redirect("/");
+
 }

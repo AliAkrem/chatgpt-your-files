@@ -14,10 +14,13 @@ import { useForm } from "@mantine/form";
 import { SignIn } from "./action";
 import { useState, useTransition } from "react";
 import Link from "next/link";
+import { AuthError } from "@supabase/supabase-js";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export default function Login() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
+  const [error, setError] = useState<string>();
+  const { setUser } = useAuthStore()
 
   const form = useForm({
     mode: "uncontrolled",
@@ -44,12 +47,16 @@ export default function Login() {
 
     try {
       startTransition(async () => {
-        const { error } = await SignIn(null, formData);
-        setError(error);
+        const { error, user } = await SignIn(null, formData);
+        if (error)
+          setError((error as AuthError).message || "An error occurred");
+        else if (user) {
+          setUser(user)
+        }
       });
     } catch (err: any) {
       setError(err.message || "An error occurred");
-      setLoading(false);
+
     }
   };
 

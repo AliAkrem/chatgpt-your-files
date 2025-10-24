@@ -1,13 +1,16 @@
 import { Toaster } from "@/components/ui/toaster";
-import Providers from "@/lib/providers";
+import QueryClientProvider from "@/lib/providers/query-client-provider";
 import { PropsWithChildren } from "react";
 import "three-dots/dist/three-dots.css";
 import { createClient } from "@/lib/supabase/server";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import '@mantine/nprogress/styles.css';
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import Navbar from "./_components/navbar";
+import { ModalsProvider } from "@mantine/modals";
+import { AuthProvider } from "@/lib/providers/auth-provider";
 
 export const metadata = {
   title: "Create Next App",
@@ -21,22 +24,29 @@ export default async function RootLayout({ children }: PropsWithChildren) {
     data: { user },
   } = await supabase.auth.getUser();
 
+
+
+
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript />
       </head>
       <body>
-        <MantineProvider>
-          <Notifications position="top-right" zIndex={1000} />
-          <Providers>
-            <div>
-              <Navbar />
-              <main>{children}</main>
-              <Toaster />
-            </div>
-          </Providers>
-        </MantineProvider>
+
+        <AuthProvider initialUser={user} >
+          <MantineProvider>
+            <ModalsProvider>
+              <Notifications position="top-right" zIndex={1000} />
+
+              <QueryClientProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Toaster />
+              </QueryClientProvider>
+            </ModalsProvider>
+          </MantineProvider>
+        </AuthProvider>
       </body>
     </html>
   );
